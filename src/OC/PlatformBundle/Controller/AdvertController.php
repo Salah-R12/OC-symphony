@@ -7,6 +7,9 @@ namespace OC\PlatformBundle\Controller;
 // N'oubliez pas ce use :
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AdvertController extends Controller
 {
@@ -23,15 +26,11 @@ class AdvertController extends Controller
 
     public function viewAction($id)
     {
-        // $id vaut 5 si l'on a appelé l'URL /platform/advert/5
+        $url = $this->get('router')->generate('oc_platform_home');
 
-        // Ici, on récupèrera depuis la base de données
-        // l'annonce correspondant à l'id $id.
-        // Puis on passera l'annonce à la vue pour
-        // qu'elle puisse l'afficher
-        $content = $this->get('templating')->render('OCPlatformBundle:Advert:index.html.twig',
-                array('nom' => 'winzou','id' => $id));
-        return new Response($content);
+        //return new RedirectResponse($url);
+        //ou
+        return $this->redirect($url);
     }
 
     public function viewSlugAction($slug, $year, $format)
