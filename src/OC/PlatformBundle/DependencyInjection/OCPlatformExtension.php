@@ -12,6 +12,14 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * @link http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
+/**
+ * La méthodeload()de cet objet est automatiquement exécutée par Symfony
+ * lorsque le bundle est chargé. Et dans cette méthode,
+ * on charge le fichier de configurationservices.yml,
+ * ce qui permet d'enregistrer la définition des services
+ * qu'il contient dans le conteneur de services
+
+ */
 class OCPlatformExtension extends Extension
 {
     /**
