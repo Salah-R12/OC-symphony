@@ -7,3 +7,4 @@ services:
     - "@mailer" //service
     - %locale% // variable
     - 50 // une constante
+
