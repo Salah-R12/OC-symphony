@@ -4,7 +4,7 @@ services:
   oc_platform.antispam:
     class: OC\PlatformBundle\Antispam\OCAntispam
     arguments:
-    - "@mailer" //service
-    - %locale% // variable
-    - 50 // une constante
+    - "@mailer"
+    - %locale%
+    - 50
 

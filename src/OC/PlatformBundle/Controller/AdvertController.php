@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use OC\PlatformBundle\Entity\Advert;
 
 class AdvertController extends Controller
 {
@@ -92,13 +93,26 @@ class AdvertController extends Controller
 
     public function addAction(Request $request)
     {
+
+        $advert = new Advert();
+        $advert->setTitle('Recherc');
+        $advert->setAuthor('Alexandre');
+        $advert->setContent("Nous ");
+
+        // On peut ne pas définir ni la date ni la publication,
+        // car ces attributs sont définis automatiquement dans le constructeur
+
+        // On récupère l'EntityManager
+        $em = $this->getDoctrine()->getManager();
+
+        // Étape 1 : On « persiste » l'entité
+        $em->persist($advert);
+
+        // Étape 2 : On « flush » tout ce qui a été persisté avant
+        $em->flush();
+
         // Si la requête est en POST, c'est que le visiteur a soumis le formulaire
-        if ($request->isMethod('POST')) {
-            $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
-            // Puis on redirige vers la page de visualisation de cettte annonce
-            return $this->redirectToRoute('oc_platform_view', array('id' => 5));
-        }
-        // Si on n'est pas en POST, alors on affiche le formulaire
+
         return $this->render('OCPlatformBundle:Advert:add.html.twig');
     }
 
