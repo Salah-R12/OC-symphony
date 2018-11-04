@@ -33,3 +33,8 @@ oc_platform_delete:
         _controller: OCPlatformBundle:Advert:delete
     requirements:
         id: \d+
+
+oc_platform_entity:
+    path:      /entity
+    defaults:
+        _controller: OCPlatformBundle:Advert:entity
