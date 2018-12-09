@@ -13,6 +13,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class AdvertController extends Controller
 {
@@ -96,34 +102,32 @@ class AdvertController extends Controller
     public function addAction(Request $request)
     {
 
-        // Création de l'entité Advert
+        // On crée un objet Advert
         $advert = new Advert();
-        $advert->setTitle('Recherche développeur Symfony.');
-        $advert->setAuthor('Alexandre');
-        $advert->setContent("Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…");
 
-        // Création de l'entité Image
-        $image = new Image();
-        $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
-        $image->setAlt('Job de rêve');
+        // On crée le FormBuilder grâce au service form factory
+        $formBuilder = $this->get('form.factory')->createBuilder(FormType::class, $advert);
 
-        // On lie l'image à l'annonce
-        $advert->setImage($image);
+        // On ajoute les champs de l'entité que l'on veut à notre formulaire
+        $formBuilder
+            ->add('date',      DateType::class)
+            ->add('title',     TextType::class)
+            ->add('content',   TextareaType::class)
+            ->add('author',    TextType::class)
+            ->add('published', CheckboxType::class)
+            ->add('save',      SubmitType::class)
+        ;
+        // Pour l'instant, pas de candidatures, catégories, etc., on les gérera plus tard
 
-        // On récupère l'EntityManager
-        $em = $this->getDoctrine()->getManager();
+        // À partir du formBuilder, on génère le formulaire
+        $form = $formBuilder->getForm();
 
-        // Étape 1 : On « persiste » l'entité
-        $em->persist($advert);
+        // On passe la méthode createView() du formulaire à la vue
+        // afin qu'elle puisse afficher le formulaire toute seule
+        return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
+            'form' => $form->createView(),
+        ));
 
-        // Étape 1 bis : si on n'avait pas défini le cascade={"persist"},
-        // on devrait persister à la main l'entité $image
-        // $em->persist($image);
-
-        // Étape 2 : On déclenche l'enregistrement
-        $em->flush();
-
-        return $this->render('OCPlatformBundle:Advert:add.html.twig');
     }
 
     public function entityAction(Request $request)
